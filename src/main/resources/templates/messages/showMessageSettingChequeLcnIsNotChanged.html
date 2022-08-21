@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymleaf/layout"
+	layout:decorator="layout">
+	
+		<div  th:fragment="content-show-message-setting-cheque-lcn-is-not-changed">
+		        <!-- recuperer le model --> 
+				<input  type="hidden" id="sucess" th:value="${success}"/>
+				<input type="hidden" id="fail"  th:value="${fail}"/>
+				
+				<button id="butttonSucess"  data-toggle="modal" data-target="#successModal" th:style="${'display: none'}">success</button>
+				<button id="butttonFail"  data-toggle="modal" data-target="#failModal" th:style="${'display: none'}">fail</button>
+				
+				
+				<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header" id="successHeader">
+				        <h5 class="modal-title" id="successTitle" th:text="#{type.remise.type.valeur.cheque.lcn.changed.title}"></h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body" th:text="#{msg.update.type.remise.type.valeur.cheque.lcn.changed}">
+					      
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary scanBtn" data-dismiss="modal" th:text="#{button.annuler}"></button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				
+				<div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header" id="failHeader">
+				        <h5 class="modal-title" id="failTitle" th:text="#{type.remise.type.valeur.cheque.lcn.not.changed.title}"></h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body" th:text="#{msg.update.type.remise.type.valeur.cheque.lcn.not.changed}">
+					       
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary scanBtn" data-dismiss="modal" th:text="#{button.annuler}"></button>
+				      </div>
+				    </div>
+				  </div>
+				</div> 
+		</div>
+</html>	

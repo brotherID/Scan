@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymleaf/layout"
+	layout:decorator="layout">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Accueil</title>
+<link  th:href="@{assets/css/bootstrap.min.css}" rel="stylesheet">
+<link  th:href="@{assets/css/style.css}" rel="stylesheet">
+
+<link rel="icon" type="image/vnd.microsoft.icon" th:href="@{assets/images_fn/mini_logo2.png}" />
+<link rel="stylesheet"  th:href="@{/assets/css/all.css}">
+<link rel="stylesheet" th:href="@{/assets/css//w3.css}">
+<link rel="stylesheet"  th:href="@{/assets/css/sidebar.css}">
+<style>
+.image_remise {
+	width: 600px;
+	height: 300px;
+}
+tr:hover
+ {
+     background-color: #fdd699;
+ }
+
+</style>
+</head>
+<body>
+	<div th:insert="sidebar :: sidebar" ></div>
+	<div id="main">
+		<div class="row">
+	  		<div class="col-4">
+	  			<button id="openNav" class="w3-button w3-teal mt-4" onclick="w3_open_close()">&#9776;</button>
+	  		</div>
+	  		<div class="col-8">
+	    		<img th:src="@{/assets/imgs/logoProcheck.svg}" style="max-width: 40%;">
+	    	</div>
+		</div>
+		<div class="container mb-5" th:insert="menu :: menu" ></div>
+		<div class="container remiseInfo">
+			
+			<h1 th:if='${typeValeur!=null && !typeValeur.equals("")}' style="width:210px;" class="title" th:text="'Liste Remises '+${typeValeur}"></h1>
+			<h1 th:unless='${typeValeur!=null && !typeValeur.equals("")}' style="width:152px;" class="title" >Liste Remises</h1>
+			
+			<div class="row">
+				<div class="col-md-11">
+					<div class="row">
+						<div class="col-1">
+						<select style="width: 74px;" id="selectSize" th:attr="onchange=|changeSize('${page.url}','${motCle}','${dateScanRemise}','${typeDate}','${typeValeur}')|" class="form-control form-control-sm">
+							<option value="10" th:selected="${page.size==10}">10</option>
+							<option value="15" th:selected="${page.size==15}">15</option>
+							<option value="20" th:selected="${page.size==20}">20</option>
+							<option value="25" th:selected="${page.size==25}">25</option>
+							<option value="30" th:selected="${page.size==30}">30</option>
+							<option value="50" th:selected="${page.size==50}">50</option>
+						</select>
+						</div>
+						<div class="col-2">
+							
+						</div>
+						<div class="col-9">
+							<form class="form-inline" th:action="@{/remises}" method="get">
+								<div class="form-check pr-2">
+								  <input th:checked="${typeDate=='dateScan'?true:false}" class="form-check-input" type="radio" name="typeDate" id="dateScan" value="dateScan" >
+								  <label class="form-check-label" for="dateScan">
+								   Date Scan
+								  </label>
+								</div>
+								<div class="form-check">
+								  <input  th:checked="${typeDate=='dateRemise'?true:false}" class="form-check-input" type="radio" name="typeDate" id="dateRemise"  value="dateRemise">
+								  <label class="form-check-label" for="dateRemise">
+								    Date Remise
+								  </label>
+								</div>
+								<div class="form-group px-2" >
+									<input class="form-control" type="date"  name="dateScanRemise" th:value="${dateScanRemise}"  />
+								</div>
+								<div class="form-group px-2" >
+									<input class="form-control" type="text"  name="motCle" th:value="${motCle}"  />
+								</div>
+								<div class="form-group">
+									<input class="form-control" type="hidden"  name="size" th:value="${page.size}"  />
+									<input class="form-control" type="hidden"  name="typeValeur" th:value="${typeValeur}"  />
+									<button style="background-color:#FBB03B;color: white;" class="btn btnRech">
+									<i class="fa fa-search"></i> Rechercher</button>
+								</div>
+								
+							</form>
+						</div>
+					</div>
+					<div style="text-align: center; color: white; margin-top: 12px; margin-bottom: 12px; background-color: red; font-weight: bold; letter-spacing: 0.5px;"
+					 	th:if="${currentUser.creeRemise!=null && currentUser.creeRemise && currentUser.typeValeurs.size()==0}">Merci de contacter administration pour paramétrer votre point capture
+					 </div>
+					 <div style="text-align: center; color: white; margin-top: 12px; margin-bottom: 12px; background-color: red; font-weight: bold; letter-spacing: 0.5px;"
+					 	th:if="${erreurmessage}" th:text="${erreurmessage}">
+					 </div>
+					<table class="table table-bordered table-sm">
+						<thead>
+							<tr style="text-align: center">
+								<th scope="col" class="col">Point capture</th>
+								<th scope="col" class="col">Ref remise</th>
+								<th scope="col" class="col">Client remettant</th>
+								<th scope="col" class="col">Rib remettant</th>
+								<th scope="col" class="col">Type valeur</th>
+								<th scope="col" class="col">Type remise</th>
+								<th scope="col" class="col">Montant remise</th>
+								<th scope="col" class="col">Nbr scanner</th>
+								<th scope="col" class="col">Nbr valeur</th>
+								<th scope="col" class="col">Scan</th>
+								<th scope="col" class="col">Valeur</th>
+								<th scope="col" class="col">Bordereau</th>
+								<th scope="col" class="col">Supprimer</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr data-toggle="tooltip" data-placement="top" th:title="${e.status==3?'Erreur dans l''export':''}" style="text-align: center;" th:each="e:${remises}" th:class="${e.status==3?'tr-erreur':''}" >
+								<td th:text="${e.capturePoint}"></td>
+								<td th:text="${e.referenceRemise}"></td>
+								<td th:text="${e.nomRemettant}" style="max-width: 241px;white-space: nowrap;overflow-x: auto;"></td>
+								<td th:text="${e.ribRemettant}"></td>
+								<td th:text="${e.typeValeur}"></td>
+								<td th:text="${e.typeRemise}"></td>
+								<td th:text="${e.montantRemise}"></td>
+								<td th:text="${e.scanNbValeur}"></td>
+								<td th:text="${e.nombreValeur}"></td>
+								<!--start scan-->
+								<td th:if="${e.status==0}">
+									<a class="btn custA " th:href="@{continueScan(idRemise=${e.idRemise})}">
+										<i class="fa fa-step-forward"></i>
+									</a>
+								</td>
+								<td th:if="${e.status==3}">
+									<a class="btn custA ">
+										<i class="fa fa-exclamation-triangle"></i>
+									</a>
+								</td>
+								<td th:if="${e.status==99}">
+									<span class="badge badge-warning" th:text="'dépassé '+${nombreJour}+'j'"></span>
+								</td>
+								<td th:if="${e.status==1||e.status==2}" data-toggle="tooltip" data-placement="top" th:title="${e.status==2?'remise bien exporter':''}" th:class="${e.status==2?'tr-success':''}">
+									<a th:if="${e.nombreValeur!=e.scanNbValeur}" class="btn custA " >
+										<i class="fa fa-times-circle"></i>
+									</a>
+									<a th:if="${e.nombreValeur==e.scanNbValeur}" class="btn custA ">
+										<i class="fa fa-check"></i>
+									</a>
+								</td>
+								<!--end scan-->
+								<td>
+									<a th:if="${e.scanNbValeur!=0}" class="btn open custA " 
+										th:attr="onclick=|imageRemise({id:'${e.idRemise}', numValeurs:'${e.scanNbValeur}'})|"><i
+											class="fa fa-eye"></i>
+									</a>
+								</td>
+								<td>
+									<a class="btn openBord custA" th:if="${e.status==1||e.status==2}"
+										th:attr="onclick=|bordereau({idRemise:'${e.idRemise}'})|">
+										<i class="fa fa-download"></i>
+									</a>
+								</td>
+								<td>
+									<a th:if="${e.scanNbValeur==0}" class="btn custA " 
+										th:attr="onclick=|deleteRemiseFct({idRemise:'${e.idRemise}',
+										ribRemettant:'${e.ribRemettant}',nomRemettant:'${e.nomRemettant}',ref_remise:'${e.referenceRemise}',
+										montantRemise:'${e.montantRemise}',nombreValeur:'${e.nombreValeur}',dateRemise:'${#dates.format(e.dateRemise, 'dd/MM/yyyy')}',
+										typeValeur:'${e.typeValeur}',typeRemise:'${e.typeRemise}'})|">
+										<i class="fa fa-trash"></i>
+									</a>
+									<a th:if="${e.scanNbValeur!=0}" class="btn custA  buttonDeleteDisable">
+										<i class="fa fa-minus-circle"></i>
+									</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<!-- Pagination Bar -->
+<div class="row">
+  <div class="col-8 text-center">
+    <ul class="pagination pagination-centered">
+      <li th:class="${page.firstPage}?'page-item disabled' : 'page-item'">
+        <span class="page-link pagenation" th:if="${page.firstPage}" >← First</span>
+        <a class="page-link pagenation" th:if="${not page.firstPage}" th:href="@{${page.url}(dateScanRemise=${dateScanRemise},typeDate=${typeDate},typeValeur=${typeValeur},motCle=${motCle},page=0,size=${page.size})}">← First</a>
+      </li>
+      <li th:class="${page.hasPreviousPage}?'page-item' : 'page-item disabled'">
+        <span class="page-link pagenation" th:if="${not page.hasPreviousPage}">«</span>
+        <a class="page-link pagenation" th:if="${page.hasPreviousPage}" th:href="@{${page.url}(dateScanRemise=${dateScanRemise},typeDate=${typeDate},typeValeur=${typeValeur},motCle=${motCle},page=${page.number-2},size=${page.size})}" title='Go to previous page'>«</a>
+      </li>
+      <li  th:each="item : ${page.items}" th:class="${item.current}? 'page-item active' : 'page-item'">
+        <span class="page-link pagenation" th:if="${item.current}" th:text="${item.number}">1</span>
+        <a  class="page-link pagenation" th:if="${not item.current}" th:href="@{${page.url}(dateScanRemise=${dateScanRemise},typeDate=${typeDate},typeValeur=${typeValeur},motCle=${motCle},page=${item.number-1},size=${page.size})}">
+        <span th:text="${item.number}">1</span>
+        </a>
+      </li>
+      <li th:class="${page.hasNextPage}? 'page-item' : 'page-item disabled'">
+        <span class="page-link pagenation" th:if="${not page.hasNextPage}">»</span>
+        <a class="page-link pagenation" th:if="${page.hasNextPage}" th:href="@{${page.url}(dateScanRemise=${dateScanRemise},typeDate=${typeDate},typeValeur=${typeValeur},motCle=${motCle},page=${page.number},size=${page.size})}" title='Go to next page'>»</a>
+      </li>
+      <li th:class="${page.lastPage}? 'page-item disabled' : 'page-item'">
+        <span class="page-link pagenation" th:if="${page.lastPage}">Last →</span>
+        <a class="page-link pagenation" th:if="${not page.lastPage}" th:href="@{${page.url}(dateScanRemise=${dateScanRemise},typeDate=${typeDate},typeValeur=${typeValeur},motCle=${motCle},page=${page.totalPages-1},size=${page.size})}">Last →</a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-4">
+  	<span th:text="'Afficher les items '+ ${(currentNumber*page.size)+1} +' - '+ ${page.lastPage?totalElements:(currentNumber+1)*remises.size()}+' de '+ ${totalElements}"></span>
+  </div>
+</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	
+	
+
+	<!-- Add Remise Modal -->
+	<form th:action="addRemise" method="post">
+		<div class="modal fade" id="addRemise" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header" id="addRemiseTitle">
+						<h5 class="modal-title" id="creeRemiseH5">Création Remise </h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="tab-content" id="myTabContent">
+							<div class="tab-pane  show active" id="home" role="tabpanel"
+								aria-labelledby="home-tab">
+
+								<div class="row register-form"
+									style="margin-right: 0px !important;">
+
+									<div class="col-md-6">
+
+									</div>
+
+									<div class="col-md-6">
+									
+										
+									</div>
+
+									<div class="col-md-3"></div>
+									<div class="col-md-6" style="text-align: center;">
+										<button class="btn btn-primary scanBtn">Crée remise</button>
+									</div>
+									<div class="col-md-3"></div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<!-- Show Images Modal -->
+	<div class="modal fade" id="showImages" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header" id="addRemiseTitle">
+					<h5 class="modal-title">Valeurs</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+
+					<div id="div_remises"></div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
+	<!-- Show Bordereau Modal -->
+	<div class="modal fade" id="showBordereau" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header" id="addRemiseTitle">
+					<h5 class="modal-title">Bordereau</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+
+					<div id="div_bordereau">
+						<embed id="em_bordereau" src="" />
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
+	<!-- Delete Remise Modal -->
+	<form th:action="deleteRemise" method="post">
+		<div class="modal fade" id="deleteRemiseModal" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header" id="deleteRemiseTitle">
+						<h5 class="modal-title" id="deleteRemiseTitleShow"></h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="tab-content" id="myTabContent">
+							<div class="tab-pane  show active" id="home" role="tabpanel"
+								aria-labelledby="home-tab">
+
+								<div class="row register-form"
+									style="margin-right: 0px !important;">
+									
+									<div class="form-group">
+									<input required="required" class="form-control" id="idRemise_delete"
+										name="id_remise_delete" type="hidden" />
+									</div>
+									
+									<div class="col-md-6">
+
+										<div class="form-group">
+											<label>Date remise</label> <input type="text"	class="form-control" 
+											id="date_remise_delete" name="date_remise_delete" readonly/>
+										</div>
+
+										<div class="form-group">
+											<label>Rib remettant</label> <input type="text" class="form-control"
+												name="rib_remettant_delete" id="rib_remettant_delete" readonly/>
+										</div>
+
+										<div class="form-group">
+											<label>Nom remettant</label> <input type="text" class="form-control"
+												name="nom_remettant_delete" id="nom_remettant_delete" readonly/>
+										</div>
+
+										<div class="form-group">
+											<label>Reference remise</label> <input type="text" class="form-control"
+												name="reference_remise_delete" id="reference_remise_delete" readonly/>
+										</div>
+
+									</div>
+
+									<div class="col-md-6">
+
+										<div class="form-group">
+											<label>Montant remise</label> <input type="text" readonly
+												required="required" class="form-control" id="montant_remise_delete"
+												name="montant_remise_delete" />
+										</div>
+
+										<div class="form-group">
+											<label>Nombre valeur</label> <input type="text" readonly 
+												class="form-control" name="nombre_valeur_delete" id="nombre_valeur_delete" />
+										</div>
+										
+										<div class="form-group">
+											<label class="control-label">Type valeur</label>
+											<input type="text" readonly
+												class="form-control" name="type_valeur_delete" id="type_valeur_delete" />
+										</div>
+
+										<div class="form-group">
+											<label class="control-label">Type remise</label>
+											<input type="text" readonly
+												class="form-control" name="type_remise_delete" id="type_remise_delete" />
+										</div>
+
+									</div>
+
+									<div class="col-md-3"></div>
+									<div class="col-md-6" style="text-align: center;">
+										<button class="btn btn-primary scanBtn">Supprimer
+											Remise</button>
+									</div>
+									<div class="col-md-3"></div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</form>
+
+</body>
+<script th:src="@{/assets/js/jquery.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/  
+    	
+    function imageRemise({id, numValeurs}){
+        const response = fetch('/PKCapWeb/scannedRemise?idRemise='+id)
+        .then((response)=>{
+            return response.json();
+        })
+        .then((data)=>{
+        	var div_remises = document.getElementById("div_remises");
+        	div_remises.innerHTML="";
+        	var responseData = data.toString().split(",");
+        	let i=0;
+        	if(responseData.length>1){
+				responseData.forEach(e=>{
+					i++;
+					let valeurBase64 = e;
+		            let bufferValeur=Uint8Array.from(atob(valeurBase64), c => c.charCodeAt(0));
+		            let blobValeur=new Blob([bufferValeur], { type: "image/jpg" });
+		            let urlValeur=URL.createObjectURL(blobValeur);
+		            let imgValeur = document.createElement("img");
+		            imgValeur.setAttribute("class","image_remise");
+		            div_remises.appendChild(imgValeur);
+		            imgValeur.src = urlValeur;
+				});
+        	}
+        });
+        $("#showImages").modal();
+    }
+    
+    function bordereau({idRemise}){
+    	em_bordereau = document.getElementById("em_bordereau");
+    	em_bordereau.style.width = '100%';
+    	em_bordereau.style.height = '842pt';
+    	em_bordereau.type = 'application/pdf';
+    	em_bordereau.src='/PKCapWeb/bordereau?idRemise='+idRemise+'#scrollbar=1';
+    	$("#showBordereau").modal();
+    }
+    
+    function deleteRemiseFct({idRemise, ribRemettant, nomRemettant, ref_remise,
+    	montantRemise, nombreValeur, dateRemise, typeValeur, typeRemise}){
+    	
+    	$('#deleteRemiseTitleShow').html('Supprimer la remise: '+idRemise); 
+    	$('#idRemise_delete').val(idRemise);
+    	$('#rib_remettant_delete').val(ribRemettant); 
+    	$('#nom_remettant_delete').val(nomRemettant); 
+    	$('#reference_remise_delete').val(ref_remise); 
+    	$('#montant_remise_delete').val(montantRemise); 
+    	$('#nombre_valeur_delete').val(nombreValeur); 
+    	$('#type_valeur_delete').val(typeValeur); 
+    	$('#type_remise_delete').val(typeRemise); 
+    	
+    	var formattedDate = new Date(dateRemise);
+    	var d = String(formattedDate.getDate());
+    	var day = "00".substring(d.length) + d;
+    	var m =  formattedDate.getMonth();
+    	m += 1;
+    	var month = "00".substring(String(m).length) + m;
+    	var y = String(formattedDate.getFullYear());
+    	var year = "0000".substring(y.length) + y;
+    	var h = String(formattedDate.getHours());
+    	var hour = "00".substring(h.length) + h;
+    	var min = String(formattedDate.getMinutes());
+		var minutes = "00".substring(min.length) + min;
+		
+    	$('#date_remise_delete').val(dateRemise); 
+		
+    	$("#deleteRemiseModal").modal();
+    }
+    
+    
+    
+    $('.buttonDeleteDisable').css('cursor', 'default');
+    
+    $('.fa-minus-circle').css('cursor', 'default');
+
+    /*]]>*/
+</script>
+
+<script type="text/javascript">
+
+	function changeSize(url,motCle,dateScanRemise,typeDate,typeValeur) {
+		var size=$("#selectSize option:selected").text();
+		window.location.href = "/PKCapWeb"+url+"?motCle="+motCle+"&dateScanRemise="+dateScanRemise+"&typeDate="+typeDate+"&typeValeur="+typeValeur+"&size="+size;
+	}
+</script>
+
+<script th:src="@{/assets/js/sidebar.js}"></script>
+
+</html>

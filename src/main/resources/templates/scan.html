@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymleaf/layout"
+	layout:decorator="layout">
+<head>
+<title></title>
+<meta charset="utf-8" />
+<link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{/assets/css/style.css}" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/assets/css/all.css}">
+
+<link rel="icon" type="image/vnd.microsoft.icon"
+	th:href="@{/assets/images_fn/mini_logo2.png}" />
+
+<script th:src="@{/assets/js/jquery.js}"></script>
+<script type="text/javascript">
+	$(window).on('load', function () {
+		$("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+		$(".cheques").animate({ scrollTop: $('.cheques').prop("scrollHeight")}, 1000);
+	});
+</script>
+<style>
+.hide {
+	display: none
+}
+</style>
+</head>
+<body>
+
+	<div class="header" style="text-align: center;">
+		<img th:src="@{/assets/imgs/logoProcheck.svg}" style="max-width: 40%;">
+	</div>
+
+	<div class="container">
+
+
+		<div class="remiseInfo">
+
+			<h1 class="remiseTitle title">Remise Informations</h1>
+			<div class="row">
+				<div class="col-md-3">
+					<strong>Remise id</strong> :<br> <span class="txt_underline"
+						th:text="${remise.idRemise}"></span>
+				</div>
+				<div class="col-md-2">
+					<strong>Point capture</strong> :<br> <span
+						class="txt_underline" th:text="${remise.capturePoint}"></span>
+				</div>
+				<div class="col-md-2">
+					<strong>Nombre valeur</strong> :<br> <span
+						class="txt_underline" th:text="${remise.nombreValeur}"></span>
+				</div>
+				<div class="col-md-2">
+					<strong>Montant</strong> :<br> <span class="txt_underline"
+						th:text="${remise.montantRemise}"></span>
+				</div>
+				<div class="col-md-3">
+					<strong>Date remise</strong> :<br> <span class="txt_underline"
+						th:text="${#dates.format(remise.dateRemise, 'dd/MM/yyyy')}"></span>
+				</div>
+			</div>
+			<div class="row">	
+				<div class="col-md-2">
+				<strong>Type valeur</strong> :<br> <span
+						class="txt_underline" th:text="${remise.typeValeur}"></span>
+				</div>
+				<div class="col-md-4">
+					<strong>Nom remettant</strong> :<br> <span
+						class="txt_underline" th:text="${remise.nomRemettant}"></span>
+				</div>
+				<div class="col-md-2">
+					<strong>Taux Escompte</strong> :<br> <span
+						class="txt_underline" th:text="${remise.tauxEscompte}"></span>
+				</div>
+				<div class="col-md-4">
+					<strong>Rib remettant</strong> :<br> <span
+						class="txt_underline" th:text="${remise.ribRemettant}"></span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+				</div>
+				<div class="col-md-8">
+
+					<a th:href="@{/remises(typeValeur=${remise.typeValeur})}" class="btn btn-primary scanBtn"
+					 th:text="'Liste remises '+${remise.typeValeur}"> 
+					 </a>
+				</div>
+			</div>
+
+		</div>
+
+
+		<!-- Show Valeur Modal -->
+		<div class="modal fade" id="showValeur" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header" id="addremiseTitle">
+						<h5 class="modal-title">Valeur</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+
+						<img name="image1" id="image1" width="600" height="300" />
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Show Bordereau Modal -->
+		<div class="modal fade" id="showBordereau" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header" id="addRemiseTitle">
+						<h5 class="modal-title">Bordereau</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="div_bordereau">
+							<embed id="em_bordereau" src="" />
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Cloturer Remise Modal -->
+		<div class="modal fade" id="cloturerRemise" tabindex="-1"
+			role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header" id="addRemiseTitle">
+						<h5 class="modal-title">Cloturer Remise</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form action="cloturer" method="get" id="validerCloturation">
+							<input required="required" class="form-control" id="idRemise"
+								name="idRemise" th:value="${remise.idRemise}" type="hidden" />
+							<div style="text-align: center;" >
+								<span  th:if="${remise.nombreValeur>remise.scanNbValeur}" style="color: red;font-weight: bold;">
+										<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+										Attention,le nombre de valeurs declare  de la remise est superieur aux
+										valeurs scannees !
+								</span> 
+								<span
+									th:if="${remise.nombreValeur>0 && remise.nombreValeur<remise.scanNbValeur}" style="color: red;font-weight: bold;">
+										<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+										Attention,le nombre de valeurs declare de la remise est inferieur aux
+										valeurs scannees!
+								</span>
+								<span
+									th:if="${remise.nombreValeur==0}" style="color:orange ;font-weight: bold;">
+										<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+										Confirmer la cloture de la remise.<br/>
+										(vous avez declare le nombre de valeur à 0)
+								</span>
+								<span
+									th:if="${remise.nombreValeur==remise.scanNbValeur}" style="color: green;font-weight: bold;">
+									<i class="fa fa-check" aria-hidden="true"></i>
+									Confirmer la cloture de la remise.
+								</span>
+							</div>
+
+							<div class="text-center">
+								<button class="btn btn-primary scanBtn">Cloturer</button>
+							</div>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+		<div class="remiseInfo ">
+			<h1 th:if="${!(#lists.isEmpty(valeurs))}" class="chequeTitle title">
+				Remise Cheques (Nombre : <span th:text="${#lists.size(valeurs)}"></span>)
+			</h1>
+			<h1 th:if="${(#lists.isEmpty(valeurs))}" class="chequeTitle title">
+				Remise Cheques (Nombre : <span th:text="0"></span>)
+			</h1>
+			<div class="row">
+				<div class="cheques col-md-6">
+					<div class="row" th:each="v:${valeurs}">
+						<div class="col-md-8" style="border-bottom: 2px solid black;">
+							<strong th:text="${vStat.index+1}"></strong> : <span
+								th:text="${v.cmc7}"></span>
+						</div>
+						<div class="col-md-4" style="border-bottom: 2px solid black;">
+							<img class="img_cheque open" th:src="@{/assets/imgs/Recto.jpg}"
+								th:attr="onclick=|imageValeur({id:'${v.idValeur}',type:'recto'})|" />
+							<img class="img_cheque open" style="margin-left: 10px;"
+								th:src="@{/assets/imgs/Verso.jpg}"
+								th:attr="onclick=|imageValeur({id:'${v.idValeur}',type:'verso'})|" />
+
+							<a th:if="${remise.scanNbValeur!=0 && remise.status!=1 && remise.status!=2 && remise.status!=99}"
+								th:href="@{/valeur/{idRemise}/{id}(idRemise=${remise.idRemise},id=${v.idValeur})}"
+								onclick="return confirm('êtes-vous sûr de vouloir supprimer cette valeur')">
+								<i class="fa fa-trash"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6 msgs">
+					<h1 class="MsgTitle">Messages</h1>
+					<div class="success msgDiv" id="successDiv">
+
+						<div id="successScanner" class="hide success msgDiv">
+							<img th:src="@{/assets/imgs/success.png}" class="iconMsg">
+							Connection avec le service Scanner etablie.
+						</div>
+						<div th:if="${scanned==1}" id="scanned" class="success msgDiv">
+							<img th:src="@{/assets/imgs/success.png}" class="iconMsg">
+							Valeur scannee.
+						</div>
+						<div id="warningScanner" class="hide warning msgDiv">
+							<img th:src="@{/assets/imgs/warning.png}" class="iconMsg">
+							Scanner non connecte
+						</div>
+						<div th:if="${scanned==0}" id="warningValeurExiste"
+							class="warning msgDiv">
+							<img th:src="@{/assets/imgs/warning.png}" class="iconMsg">
+							Valeur déja scannée dans la journée
+
+						</div>
+						<div id="failedScanner" class="hide failed msgDiv">
+							<img th:src="@{/assets/imgs/failed.png}" class="iconMsg">
+							Erreur de Connection avec Scanner !
+						</div>
+						<div id="fermetureScanner" class="hide failed msgDiv">
+							<img th:src="@{/assets/imgs/failed.png}" class="iconMsg">
+							Fermeture de la session.
+						</div>
+						<div id="failedReScanner" class="hide failed msgDiv">
+							<img th:src="@{/assets/imgs/failed.png}" class="iconMsg">
+							Merci de re scanner la dernière valeur 
+						</div>
+						
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="txt_centre my-3">
+			<a th:if="${remise.status==0}" class="btn scanBtn"
+				onclick="sendMessage()">Scanner</a> 
+			<a th:if="${remise.scanNbValeur!=0 && remise.status!=1 && remise.status!=2 && remise.status!=99}"
+				class="btn clotureBtn"
+				th:attr="onclick=|cloturer({idRemise:'${remise.idRemise}'})|">Cloturer</a>
+			<a th:if="${remise.status==1||remise.status==2}" class="btn btn-outline-info"
+				th:attr="onclick=|bordereau({idRemise:'${remise.idRemise}'})|">Bordereau
+				<i class="fa fa-download"></i>
+			</a>
+
+		</div>
+
+		<form action="scanCheque" method="post" id="myForm">
+
+			<input type="hidden" id="cmc7" name="cmc7" /> 
+			<input type="hidden" id="endos" name="endos" /> 
+			<input type="hidden" id="recto" name="recto" /> 
+			<input type="hidden" id="verso" name="verso" /> 
+			<input type="hidden" id="version_app" name="version_app" /> 
+			<input type="hidden" th:value="${remise.idRemise}" name="idRemise">
+
+		</form>
+
+	</div>
+	
+	<input  type="hidden" id="referenceRemise" th:value="${referenceRemise}"/>
+	<input  type="hidden" id="referenceRemiseUpdated" th:value="${referenceRemiseUpdated}"/>
+	<input  type="hidden" id="referenceRemiseOld" th:value="${referenceRemiseOld}"/>
+	<button id="butttonReferenceRemiseUpdated"  data-toggle="modal" data-target="#referenceRemiseUpdatedModal" th:style="${'display: none'}">referenceRemiseUpdated</button>
+
+     <div class="modal fade" id="referenceRemiseUpdatedModal" tabindex="-1" role="dialog" aria-labelledby="referenceRemiseUpdatedModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header" id="referenceRemiseUpdatedModalHeader">
+	        <h5 class="modal-title" id="referenceRemiseUpdatedModalTitle" th:text="#{reference.remise.updated.title}"></h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body" th:text="#{reference.remise.updated.msg}">
+	      </div>
+		      <span>La reference initial est :</span>
+		      <div th:text="${referenceRemiseOld}"></div>
+		      <br>
+		      <span>La reference recalculé est :</span>
+		      <div th:text="${referenceRemise}"></div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary scanBtn" data-dismiss="modal" th:text="#{button.annuler}"></button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+	<script type="text/javascript" th:src="@{/assets/js/bootstrap.min.js}"></script>
+
+	<script type="text/javascript"> 
+	
+	
+	function displayModalReferenceRemiseUpdated(){
+		 if($('#referenceRemiseUpdated').val()== "true")
+		 {
+			 $('#butttonReferenceRemiseUpdated').click();
+		 }
+	}
+	
+	window.onload = function(){
+		displayModalReferenceRemiseUpdated();
+	}
+	
+	
+	
+    
+	
+	var webSocket = new WebSocket("ws://localhost:8090");
+    
+    var cmc7=document.getElementById("cmc7");
+    var endos=document.getElementById("endos");
+    var recto=document.getElementById("recto");
+    var verso=document.getElementById("verso");
+    var version_app=document.getElementById("version_app");
+
+    webSocket.onopen=function(message){processOpen(message);};
+    webSocket.onmessage=function(message){processMessage(message);};
+    webSocket.onclose=function(message){processClose(message);};
+    webSocket.onerror=function(message){processError(message);};
+    
+    function processOpen(message) {
+    	successScanner = document.getElementById("successScanner");
+	    successScanner.classList.remove("hide");
+    }
+
+    var i = 0;
+    
+    function processMessage(message) {
+    	
+    	if(message.data=="Error"){
+     		let warningScanner = document.getElementById("warningScanner");
+     		warningScanner.classList.remove("hide");
+         }
+     	else if(message.data=="ReScan"){
+     		let warningScanner = document.getElementById("failedReScanner");
+     		warningScanner.classList.remove("hide");
+     	}
+     	else{
+	    	json = message.data;
+	    	dataJson = JSON.parse(json);
+	    	recto.value=dataJson.Recto;
+	    	 verso.value=dataJson.Verso;
+	    	 cmc7.value=dataJson.Cmc7;
+	    	 endos.value=dataJson.Endos;
+	    	 version_app.value=dataJson.VersionApp;
+	    	 document.getElementById("myForm").submit();
+     	}
+         
+    }
+    
+    function sendMessage() {
+        webSocket.send("start_scan");
+    }
+    
+    function processClose(message) {
+
+        webSocket.send("client disconnected...");
+		let fermetureScanner = document.getElementById("fermetureScanner");
+		fermetureScanner.classList.remove("hide");
+	    
+    }
+    
+    function processError(message) {
+
+        webSocket.send("client disconnected...");
+		let failedScanner = document.getElementById("failedScanner");
+		failedScanner.classList.remove("hide");
+    }
+
+</script>
+
+	<script th:inline="javascript">
+    /*<![CDATA[*/  
+    	
+    function imageValeur({id,type}){
+        const response = fetch('/PKCapWeb/scannedValeur?idValeur='+id+'&type='+type)
+        .then((response)=>{
+            return response.json();
+        })
+        .then((data)=>{
+        	
+            let valeurBase64 = data;
+            let bufferValeur=Uint8Array.from(atob(valeurBase64), c => c.charCodeAt(0));
+            let blobValeur=new Blob([bufferValeur], { type: "image/jpg" });
+            let urlValeur=URL.createObjectURL(blobValeur);
+            var imgValeur = document.getElementById("image1");
+            imgValeur.src = urlValeur;
+            
+        });
+        $("#showValeur").modal();
+    }
+    
+    function bordereau({idRemise}){
+    	em_bordereau = document.getElementById("em_bordereau");
+    	em_bordereau.style.width = '100%';
+    	em_bordereau.style.height = '842pt';
+    	em_bordereau.type = 'application/pdf';
+    	em_bordereau.src='/PKCapWeb/bordereau?idRemise='+idRemise;
+    	$("#showBordereau").modal();
+    }
+    
+    function cloturer({idRemise}){
+    	$("#cloturerRemise").modal();
+    }
+
+    /*]]>*/
+</script>
+
+
+</body>
+</html>

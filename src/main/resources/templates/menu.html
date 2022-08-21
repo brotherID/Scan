@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html  xmlns:th="www.thymleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Menu</title>
+</head>
+<body>
+	
+	<div class="dropdown" th:fragment="menu">
+		<img class="img_user" th:src="@{/assets/imgs/user.png}" />
+		<span th:text="${session.username}"></span>
+		<div class="dropdown-content">
+			<p> 
+				<a href="/PKAuth/logout">Logout</a> 
+			</p>
+		</div>
+	</div>
+	
+</body>
+</html>

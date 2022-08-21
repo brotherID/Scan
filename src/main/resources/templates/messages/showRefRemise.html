@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymleaf/layout"
+	layout:decorator="layout">
+	
+	<div th:fragment="content-show-ref-remise">
+	    <input  type="hidden" id="showRefRemise" th:value="${showRefRemise}"/>
+		<button id="butttonShowRefRemise"  data-toggle="modal" data-target="#showRefRemiseModal" th:style="${'display: none'}">showRefRemise</button>
+	      <div class="modal fade" id="showRefRemiseModal" tabindex="-1" role="dialog" aria-labelledby="showRefRemiseModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header" id="showRefRemiseHeader">
+		        <h5 class="modal-title" id="showRefRemiseTitle" th:text="#{show.ref.remise.title}"></h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <form method="POST" action="updateRefRemises">
+		           <input  type="hidden" id="idCompteGr" name="idCompteGr"  th:value="${idCompteGr}"/>
+			       <select id="paramRefRemise" name="idParamRefRemise">
+					  <option th:value="${paramRefRemise.idParamRefRemise}" 
+					  th:selected="${paramRefRemise.idParamRefRemise eq idParamRefRemise}"
+					  th:each="paramRefRemise: ${listParamRefRemise}">
+					    <span th:text="${paramRefRemise.formule}"></span>
+					  </option>
+				   </select>
+				   <button type="submit" class="btn btn-secondary" th:text="#{button.update}"></button>
+				</form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary scanBtn" data-dismiss="modal" th:text="#{button.annuler}"></button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</div>
+	
+</html>	

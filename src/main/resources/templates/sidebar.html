@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Side Bar</title>
+</head>
+<body>
+
+	<div th:fragment="sidebar"
+		class="sidebar w3-bar-block w3-card w3-animate-left"
+		style="display: none" id="mySidebar">
+		<span onclick="w3_close()" class="w3-bar-item w3-button w3-large"
+			style="margin-bottom: 13px; background-color: #d68717; color: white;">
+			Capture Web </span>			
+		<ul
+			th:if="${(currentUser.isGr!=null && currentUser.isGr ) || session.role=='ADMIN'}">
+			<li><a href="/"><i class="far fa-credit-card"></i>Home</a></li>
+		</ul>
+		<span class="text-muted pl-3">Consultation Remise</span>
+		<ul th:if="${currentUser.isGr==null || !currentUser.isGr}">
+			<li><a th:href="@{/remises?typeValeur=CHQ}"><i
+					class="far fa-credit-card"></i>Remise Chèque</a></li>
+			<li><a th:href="@{/remises?typeValeur=LCN}"><i
+					class="far fa-credit-card"></i>Remise LCN</a></li>
+		</ul>
+		<ul
+			th:if="${currentUser.isGr!=null && currentUser.isGr && currentUser.typeValeurs.size()>1}">
+			<li><a th:href="@{/remises?typeValeur=CHQ}"><i
+					class="far fa-credit-card"></i>Remise Chèque</a></li>
+			<li><a th:href="@{/remises?typeValeur=LCN}"><i
+					class="far fa-credit-card"></i>Remise LCN</a></li>
+		</ul>
+		<ul
+			th:if="${currentUser.isGr!=null && currentUser.isGr && currentUser.typeValeurs.size()==1}">
+			<li th:if="${currentUser.typeValeurs.get(0).type=='CHQ'}"><a
+				th:href="@{/remises?typeValeur=CHQ}"><i
+					class="far fa-credit-card"></i>Remise Chèque</a></li>
+			<li th:if="${currentUser.typeValeurs.get(0).type=='LCN'}"><a
+				th:href="@{/remises?typeValeur=LCN}"><i
+					class="far fa-credit-card"></i>Remise LCN</a></li>
+		</ul>
+
+		<span
+			th:if="${currentUser.creeRemise!=null && currentUser.creeRemise}"
+			class="text-muted px-3">Création Remise</span>
+		<ul
+			th:if="${currentUser.creeRemise!=null && currentUser.creeRemise && currentUser.typeValeurs.size()>1}">
+			<li><a th:href="@{/addRemise?typeValeur=CHQ}"><i
+					class="fas fa-file-invoice"></i>Remise Chèque</a></li>
+			<li><a th:href="@{/addRemise?typeValeur=LCN}"><i
+					class="fas fa-file-invoice"></i>Remise LCN</a></li>
+		</ul>
+		<ul
+			th:if="${currentUser.creeRemise!=null && currentUser.creeRemise && currentUser.typeValeurs.size()==1}">
+			<li th:if="${currentUser.typeValeurs.get(0).type=='CHQ'}"><a
+				th:href="@{/addRemise?typeValeur=CHQ}"><i
+					class="fas fa-file-invoice"></i>Remise Chèque</a></li>
+			<li th:if="${currentUser.typeValeurs.get(0).type=='LCN'}"><a
+				th:href="@{/addRemise?typeValeur=LCN}"><i
+					class="fas fa-file-invoice"></i>Remise LCN</a></li>
+		</ul>
+
+		<span class="text-muted pl-3">Impression Bordereau</span>
+		<ul th:if="${currentUser.isGr==null || !currentUser.isGr}">
+			<li><a th:href="@{/remises?typeValeur=CHQ&action=bordereau}"><i
+					class="far fa-credit-card"></i>Remise Chèque</a></li>
+			<li><a th:href="@{/remises?typeValeur=LCN&action=bordereau}"><i
+					class="far fa-credit-card"></i>Remise LCN</a></li>
+		</ul>
+		<ul
+			th:if="${currentUser.isGr!=null && currentUser.isGr && currentUser.typeValeurs.size()>1}">
+			<li><a th:href="@{/remises?typeValeur=CHQ&action=bordereau}"><i
+					class="far fa-credit-card"></i>Remise Chèque</a></li>
+			<li><a th:href="@{/remises?typeValeur=LCN&action=bordereau}"><i
+					class="far fa-credit-card"></i>Remise LCN</a></li>
+		</ul>
+		<ul
+			th:if="${currentUser.isGr!=null && currentUser.isGr && currentUser.typeValeurs.size()==1}">
+			<li th:if="${currentUser.typeValeurs.get(0).type=='CHQ'}"><a
+				th:href="@{/remises?typeValeur=CHQ&action=bordereau}"><i
+					class="far fa-credit-card"></i>Remise Chèque</a></li>
+			<li th:if="${currentUser.typeValeurs.get(0).type=='LCN'}"><a
+				th:href="@{/remises?typeValeur=LCN&action=bordereau}"><i
+					class="far fa-credit-card"></i>Remise LCN</a></li>
+		</ul>
+
+		<span th:if="${session.role=='ADMIN'}" class="text-muted px-3">Gestion
+			Utilisateur</span>
+		<ul th:if="${session.role=='ADMIN'}">
+			<li><a th:href="@{/listUsers}"><i class="fas fa-id-badge"></i>Liste
+					users</a></li>
+		</ul>
+	</div>
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymleaf/layout"
+	layout:decorator="layout">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Accueil</title>
+<link th:href="@{assets/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{assets/css/style.css}" rel="stylesheet">
+
+<link rel="icon" type="image/vnd.microsoft.icon"
+	th:href="@{assets/images_fn/mini_logo2.png}" />
+<link rel="stylesheet" th:href="@{/assets/css/all.css}">
+<link rel="stylesheet" th:href="@{/assets/css//w3.css}">
+<link rel="stylesheet" th:href="@{/assets/css/sidebar.css}">
+<style>
+.image_remise {
+	width: 600px;
+	height: 300px;
+}
+
+tr:hover {
+	background-color: #fdd699;
+}
+</style>
+</head>
+<body>
+
+	<div th:insert="sidebar :: sidebar"></div>
+	<div id="main">
+		<div class="row">
+			<div class="col-4">
+				<button id="openNav" class="w3-button w3-teal mt-4"
+					onclick="w3_open_close()">&#9776;</button>
+			</div>
+			<div class="col-8">
+				<img th:src="@{/assets/imgs/logoProcheck.svg}"
+					style="max-width: 40%;">
+			</div>
+		</div>
+		<div class="container mb-5" th:insert="menu :: menu"></div>
+		<div class="container remiseInfo">
+
+			<h1 class="listRemiseTitle title">Liste Users</h1>
+			<div class="row">
+				<div class="col-md-11">
+					<div class="row">
+						<div class="col-1">
+							<select style="width: 74px;" id="selectSize"
+								th:attr="onchange=|changeSize('${page.url}','${motCle}','${typeG}')|"
+								class="form-control form-control-sm">
+								<option value="10" th:selected="${page.size==10}">10</option>
+								<option value="15" th:selected="${page.size==15}">15</option>
+								<option value="20" th:selected="${page.size==20}">20</option>
+								<option value="25" th:selected="${page.size==25}">25</option>
+								<option value="30" th:selected="${page.size==30}">30</option>
+								<option value="50" th:selected="${page.size==50}">50</option>
+							</select>
+						</div>
+						<div class="col-4"></div>
+						<div class="col-7">
+							<form class="form-inline" th:action="@{/listUsers}" method="get">
+								<div class="form-check pr-2">
+									<input th:checked="${typeG=='GR'?true:false}"
+										class="form-check-input" type="radio" name="typeG"
+										id="grandRemettant" value="GR"> <label
+										class="form-check-label" for="grandRemettant"> Grand
+										Remettant </label>
+								</div>
+								<div class="form-check">
+									<input th:checked="${typeG=='AG'?true:false}"
+										class="form-check-input" type="radio" name="typeG" id="agence"
+										value="AG"> <label class="form-check-label"
+										for="agence"> Agence </label>
+								</div>
+								<div class="form-group px-2">
+									<input class="form-control" type="text" name="motCle"
+										th:value="${motCle}" />
+								</div>
+								<div class="form-group">
+									<input class="form-control" type="hidden" name="size"
+										th:value="${page.size}" />
+									<button style="background-color: #FBB03B; color: white;"
+										class="btn btnRech">
+										<i class="fa fa-search"></i> Rechercher
+									</button>
+								</div>
+
+							</form>
+						</div>
+					</div>
+					<div
+						style="text-align: center; color: white; margin-top: 12px; margin-bottom: 12px; background-color: green; font-weight: bold; letter-spacing: 0.5px;"
+						th:if="${message}">
+						<span th:text="${message}"></span>
+					</div>
+					<table class="table table-bordered table-sm">
+						<thead>
+							<tr style="text-align: center">
+								<th scope="col" class="col">Code Banque</th>
+								<th scope="col" class="col">Point Capture</th>
+								<th scope="col" class="col">User Name</th>
+								<th scope="col" class="col">User Login</th>
+								<th scope="col" class="col">Role</th>
+								<th scope="col" class="col">Cree remise</th>
+								<th scope="col" class="col">Is GR</th>
+								<th scope="col" class="col">Is Password Changed</th>
+								<th scope="col" class="col">Is Active</th>
+								<th scope="col" class="col">Nb Fail Password</th>
+								<th scope="col" class="col">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr style="text-align: center;" th:each="u:${users}">
+								<td th:text="${u.bankCode}"></td>
+								<td th:text="${u.capturePoint}"></td>
+								<td th:text="${u.userName}"></td>
+								<td th:text="${u.userLogin}"></td>
+								<td th:text="${u.role}"></td>
+								<td><img width="20px"
+									th:if="${u.creeRemise==null || !u.creeRemise}"
+									th:src="@{/assets/imgs/failed.png}" /> <img width="20px"
+									th:unless="${u.creeRemise==null || !u.creeRemise}"
+									th:src="@{/assets/imgs/success.png}" /></td>
+								<td><img width="20px" th:if="${u.isGr==null || !u.isGr}"
+									th:src="@{/assets/imgs/failed.png}" /> <img width="20px"
+									th:unless="${u.isGr==null || !u.isGr}"
+									th:src="@{/assets/imgs/success.png}" /></td>
+								<td><img width="20px"
+									th:if="${u.isPasswordChanged==null || !u.isPasswordChanged}"
+									th:src="@{/assets/imgs/failed.png}" /> <img width="20px"
+									th:unless="${u.isPasswordChanged==null || !u.isPasswordChanged}"
+									th:src="@{/assets/imgs/success.png}" /></td>
+								<td><img width="20px"
+									th:if="${u.isActif==null || u.isActif==0}"
+									th:src="@{/assets/imgs/failed.png}" /> <img width="20px"
+									th:unless="${u.isActif==null || u.isActif==0}"
+									th:src="@{/assets/imgs/success.png}" /></td>
+								<td th:text="${u.nbFailPassword}"></td>
+								<td><a th:if="${u.isActif==1}" class="btn custA "
+									th:href="@{/actionUser(idUser=${u.idUser},action='disable')}">
+										<img th:src="@{/assets/imgs/on.png}" />
+								</a> <a th:if="${u.isActif==0}" class="btn custA"
+									th:href="@{/actionUser(idUser=${u.idUser},action='enable')}">
+										<img th:src="@{/assets/imgs/off.png}" />
+								</a> <a th:if="${u.isGr!=null && u.isGr}" class="btn custA"
+									th:href="@{/actionUser(idUser=${u.idUser},action='reset')}">
+										<img th:src="@{/assets/imgs/resetPass.png}" />
+								</a> <a th:if="${u.isGr!=null && u.isGr}" class="btn custA"
+									th:attr="onclick=|setUserId('${u.userLogin}')|"
+									data-toggle="modal" data-target="#settingsModal"> <img
+										th:src="@{/assets/imgs/settings.png}" />
+								</a></td>
+							</tr>
+						</tbody>
+					</table>
+
+
+					<!-- Pagination Bar -->
+					<div class="row">
+						<div class="col-8 text-center">
+							<ul class="pagination pagination-centered">
+								<li
+									th:class="${page.firstPage}?'page-item disabled' : 'page-item'">
+									<span class="page-link pagenation" th:if="${page.firstPage}">←
+										First</span> <a class="page-link pagenation"
+									th:if="${not page.firstPage}"
+									th:href="@{${page.url}(motCle=${motCle},typeG=${typeG},page=0,size=${page.size})}">←
+										First</a>
+								</li>
+								<li
+									th:class="${page.hasPreviousPage}?'page-item' : 'page-item disabled'">
+									<span class="page-link pagenation"
+									th:if="${not page.hasPreviousPage}">«</span> <a
+									class="page-link pagenation" th:if="${page.hasPreviousPage}"
+									th:href="@{${page.url}(motCle=${motCle},typeG=${typeG},page=${page.number-2},size=${page.size})}"
+									title='Go to previous page'>«</a>
+								</li>
+								<li th:each="item : ${page.items}"
+									th:class="${item.current}? 'page-item active' : 'page-item'">
+									<span class="page-link pagenation" th:if="${item.current}"
+									th:text="${item.number}">1</span> <a
+									class="page-link pagenation" th:if="${not item.current}"
+									th:href="@{${page.url}(motCle=${motCle},typeG=${typeG},page=${item.number-1},size=${page.size})}">
+										<span th:text="${item.number}">1</span>
+								</a>
+								</li>
+								<li
+									th:class="${page.hasNextPage}? 'page-item' : 'page-item disabled'">
+									<span class="page-link pagenation"
+									th:if="${not page.hasNextPage}">»</span> <a
+									class="page-link pagenation" th:if="${page.hasNextPage}"
+									th:href="@{${page.url}(motCle=${motCle},typeG=${typeG},page=${page.number},size=${page.size})}"
+									title='Go to next page'>»</a>
+								</li>
+								<li
+									th:class="${page.lastPage}? 'page-item disabled' : 'page-item'">
+									<span class="page-link pagenation" th:if="${page.lastPage}">Last
+										→</span> <a class="page-link pagenation" th:if="${not page.lastPage}"
+									th:href="@{${page.url}(motCle=${motCle},typeG=${typeG},page=${page.totalPages-1},size=${page.size})}">Last
+										→</a>
+								</li>
+							</ul>
+						</div>
+						<div class="col-4">
+							<span
+								th:text="'Afficher les items '+ ${(currentNumber*page.size)+1} +' - '+ ${page.lastPage?totalElements:(currentNumber+1)*users.size()}+' de '+ ${totalElements}"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- Settings modal -->
+	<div class="modal fade" id="settingsModal" tabindex="-1" role="dialog"
+		aria-labelledby="settingsModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content settingModalContent">
+				<div class="modal-header" id="settingsHeader">
+					<h5 class="modal-title" id="settingsTitle"
+						th:text="#{settings.title}"></h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+						<li class="nav-item"><a
+							class="generalSetting-tabClass nav-link " id="generalSetting-tab"
+							data-toggle="tab" href="#generalSetting" role="tab"
+							aria-controls="generalSetting" aria-selected="false"
+							th:text="#{general.setting}" onclick="loadGeneralSetting()"></a></li>
+						<li class="nav-item"><a
+							class="prametreChequeLCN-tabClass  nav-link active"
+							id="parametreChequelcn-tab" data-toggle="tab"
+							href="#parametreChequelcn" role="tab"
+							aria-controls="parametreChequelcn" aria-selected="true"
+							th:text="#{setting.cheque.lcn}"></a></li>
+					</ul>
+					<div class="tab-content" id="myTabContent">
+						<!-- begin body Parametre general -->
+						<div class="generalSettingClass tab-pane fade  "
+							id="generalSetting" role="tabpanel"
+							aria-labelledby="generalSetting-tab">
+							<div
+								th:replace="params/parametre-general :: content-parametre-general" />
+						</div>
+						<!-- end body Parametre general -->
+						<!-- begin body parametreChequelcn -->
+						<div class="parametreChequelcnClass tab-pane fade show active"
+							id="parametreChequelcn" role="tabpanel"
+							aria-labelledby="parametreChequelcn-tab">
+							<div
+								th:replace="params/parametre-cheque-lcn :: content-parametre-cheque-lcn" />
+						</div>
+						<!-- end body parametreChequelcn -->
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary scanBtn"
+						data-dismiss="modal" th:text="#{modal.setting.button.annuler}"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- <div th:replace="messages/showMessageSettingChequeLcnIsNotChanged :: content-show-message-setting-cheque-lcn-is-not-changed" /> -->
+
+
+
+	<input type="hidden" id="sucess" th:value="${success}" />
+	<input type="hidden" id="fail" th:value="${fail}" />
+
+	<button id="butttonSucess" data-toggle="modal"
+		data-target="#successModal" th:style="${'display: none'}">success</button>
+	<button id="butttonFail" data-toggle="modal" data-target="#failModal"
+		th:style="${'display: none'}">fail</button>
+
+
+	<div class="modal fade" id="successModal" tabindex="-1" role="dialog"
+		aria-labelledby="successModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header" id="successHeader">
+					<h5 class="modal-title" id="successTitle"
+						th:text="#{type.remise.type.valeur.cheque.lcn.changed.title}"></h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body"
+					th:text="#{msg.update.type.remise.type.valeur.cheque.lcn.changed}">
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary scanBtn"
+						data-dismiss="modal" th:text="#{button.annuler}"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="failModal" tabindex="-1" role="dialog"
+		aria-labelledby="failModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header" id="failHeader">
+					<h5 class="modal-title" id="failTitle"
+						th:text="#{type.remise.type.valeur.cheque.lcn.not.changed.title}"></h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body"
+					th:text="#{msg.update.type.remise.type.valeur.cheque.lcn.not.changed}">
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary scanBtn"
+						data-dismiss="modal" th:text="#{button.annuler}"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- <div th:replace="messages/showRefRemise :: content-show-ref-remise" /> -->
+	<input type="hidden" id="showRefRemise" th:value="${showRefRemise}" />
+	<button id="butttonShowRefRemise" data-toggle="modal"
+		data-target="#showRefRemiseModal" th:style="${'display: none'}">showRefRemise</button>
+	<div class="modal fade" id="showRefRemiseModal" tabindex="-1"
+		role="dialog" aria-labelledby="showRefRemiseModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header" id="showRefRemiseHeader">
+					<h5 class="modal-title" id="showRefRemiseTitle"
+						th:text="#{show.ref.remise.title}"></h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form method="POST" action="updateRefRemises">
+						<input type="hidden" id="idCompteGr" name="idCompteGr"
+							th:value="${idCompteGr}" /> 
+					    <input type="hidden" id="idCompteGrParametreGeneral" 
+					        name="idCompteGrParametreGeneral"
+							th:value="${idCompteGr}" />
+					    <select id="paramRefRemise" name="idParamRefRemise">
+							<option th:value="${paramRefRemise.idParamRefRemise}"
+								th:selected="${paramRefRemise.idParamRefRemise eq idParamRefRemise}"
+								th:each="paramRefRemise: ${listParamRefRemise}">
+								<span th:if="${paramRefRemise.formule != ''}" th:text="${paramRefRemise.formule}"></span>
+								<span th:if="${paramRefRemise.formule eq ''}" th:text="standard"></span>
+							</option>
+						</select>
+						<button type="submit" class="btn btn-secondary buttonUpdate"
+							th:text="#{button.update}"></button>
+					</form>
+					<form method="POST" action="addParamRefRemisesSaisie">
+						<input type="hidden" id="idCompteGr" name="idCompteGr"
+							th:value="${idCompteGr}" /> 
+						<input type="hidden" id="idCompteGrParametreGeneral" name="idCompteGrParametreGeneral"
+							th:value="${idCompteGr}" />
+						<table>
+							<tr class="trFormule">
+								<td class="tdInputformule">
+								    <input th:if="!${existingFormule}"  class="inputReferenceRemise" id="formule" name="formule"
+									required pattern="^((.*SD.*)|(.*S.*))[^%]$" />
+									<input th:if="${existingFormule}" class="inputReferenceRemise" id="formule" name="formule"
+									required pattern="^((.*SD.*)|(.*S.*))[^%]$" th:placeholder="${formule}"/>
+								</td>
+								<td style="border: 0px solid #000000 !important;">
+									<button type="submit"
+										class="btn btn-secondary ajouterReferenceRemise"
+										th:text="#{button.add.formule}"></button>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</div>
+				<div class="modal-footer">
+				    <div class="errorFormuleDiv" th:if="${errorFormule}" >
+					   Formule non conforme
+	                </div>
+	                <div class="existingFormuleDiv" th:if="${existingFormule}" >
+					   Formule d&eacute;j&agrave; existante 
+	                </div>
+					<button type="button" class="btn btn-secondary scanBtn"
+						data-dismiss="modal" th:text="#{button.annuler}"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    
+
+	<input type="hidden" id="formuleUpdated" th:value="${formuleUpdated}" />
+	<button id="butttonFormuleUpdated" data-toggle="modal"
+		data-target="#formuleUpdatedModal" th:style="${'display: none'}">success</button>
+
+	<div class="modal fade" id="formuleUpdatedModal" tabindex="-1"
+		role="dialog" aria-labelledby="formuleUpdatedModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header" id="formuleUpdatedHeader">
+					<h5 class="modal-title" id="formuleUpdatedTitle"
+						th:text="#{formule.updated.title}"></h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" th:text="#{formule.updated.msg}"></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary scanBtn"
+						data-dismiss="modal" th:text="#{button.annuler}"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- <div th:replace="messages/showMessageSettingReferenceRemiseIsNotChanged :: content-show-message-setting-reference-remise-is-not-changed" /> -->
+	<input type="hidden" id="settingReferenceRemiseisChanged"
+		th:value="${settingReferenceRemiseisChanged}" />
+	<input type="hidden" id="settingReferenceRemiseNotChanged"
+		th:value="${settingReferenceRemiseNotChanged}" />
+	<button id="butttonSettingReferenceRemiseisChanged" data-toggle="modal"
+		data-target="#settingReferenceRemiseisChangedModal"
+		th:style="${'display: none'}">success</button>
+	<button id="butttonSettingReferenceRemiseNotChanged"
+		data-toggle="modal"
+		data-target="#settingReferenceRemiseNotChangedModal"
+		th:style="${'display: none'}">fail</button>
+
+	<div class="modal fade" id="settingReferenceRemiseisChangedModal"
+		tabindex="-1" role="dialog"
+		aria-labelledby="settingReferenceRemiseisChangedModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header" id="settingReferenceRemiseisChangedHeader">
+					<h5 class="modal-title" id="settingReferenceRemiseisChangedTitle"
+						th:text="#{setting.reference.remise.is.changed.title}"></h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body"
+					th:text="#{msg.setting.reference.remise.is.changed}"></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary scanBtn"
+						data-dismiss="modal" th:text="#{button.annuler}"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="settingReferenceRemiseNotChangedModal"
+		tabindex="-1" role="dialog"
+		aria-labelledby="settingReferenceRemiseNotChangedModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header"
+					id="settingReferenceRemiseNotChangedHeader">
+					<h5 class="modal-title" id="settingReferenceRemiseNotChangedTitle"
+						th:text="#{setting.reference.remise.not.changed.title}"></h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body"
+					th:text="#{msg.setting.reference.remise.not.changed}"></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary scanBtn"
+						data-dismiss="modal" th:text="#{button.annuler}"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+</body>
+<script th:src="@{/assets/js/jquery.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/setting.js}"></script>
+
+<script type="text/javascript">
+	function changeSize(url, motCle, typeG) {
+		var size = $("#selectSize option:selected").text();
+		window.location.href = "/PKCapWeb" + url + "?motCle=" + motCle
+				+ "&typeG=" + typeG + "&size=" + size;
+	}
+
+	$('#settingsModal').on(
+			'show.bs.modal',
+			function() {
+				$.get("/PKCapWebSSO/modals/modal/chequeLcn?userId="
+						+ $(".userID").val(), function(data) {
+					$(".generalSetting-tabClass").removeClass('active');
+					$(".parametreLcn-tabClass").removeClass('active');
+					$(".prametreChequeLCN-tabClass").addClass('active');
+					$(".parametreChequeClass").addClass('show active');
+					$(".generalSettingClass").removeClass('show active');
+					$(".parametreLcnClass").removeClass('show active');
+					$(".parametreChequelcnClass").addClass('show active');
+					$('#settingsModal').find(
+							'.modal-body .parametreChequelcnClass').html(data);
+				})
+			})
+
+	function loadGeneralSetting() {
+		$.get("/PKCapWebSSO/modals/modal/settingGeneral?userId="
+				+ $(".userID").val(), function(data) {
+			$('#settingsModal').find('.modal-body .generalSettingClass').html(
+					data);
+		})
+	}
+
+	function displayModalSuccess() {
+		if ($('#sucess').val() == "true") {
+			$('#butttonSucess').click();
+		}
+	}
+	function displayModalFail() {
+		if ($('#fail').val() == "true") {
+			$('#butttonFail').click();
+		}
+	}
+	function displayModalShowRefRemise() {
+		if ($('#showRefRemise').val() == "true") {
+			$('#butttonShowRefRemise').click();
+		}
+	}
+	function displayModalShowMessageSettingReferenceRemiseIsChanged() {
+		if ($('#settingReferenceRemiseisChanged').val() == "true") {
+			$('#butttonSettingReferenceRemiseisChanged').click();
+		}
+	}
+	function displayModalShowMessageSettingReferenceRemiseNotChanged() {
+		if ($('#settingReferenceRemiseNotChanged').val() == "true") {
+			$('#butttonSettingReferenceRemiseNotChanged').click();
+		}
+	}
+	function displayModalShowMessageFormuleUpdated() {
+		if ($('#formuleUpdated').val() == "true") {
+			$('#butttonFormuleUpdated').click();
+		}
+	}
+
+	window.onload = function() {
+		displayModalSuccess();
+		displayModalFail();
+		displayModalShowRefRemise();
+		displayModalShowMessageSettingReferenceRemiseIsChanged();
+		displayModalShowMessageSettingReferenceRemiseNotChanged();
+		displayModalShowMessageFormuleUpdated();
+	}
+</script>
+
+<script th:src="@{/assets/js/sidebar.js}"></script>
+
+
+</html>

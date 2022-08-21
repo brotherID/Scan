@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymleaf/layout"
+	layout:decorator="layout">
+	
+	<div  th:fragment="content-parametre-general">
+             <input type="hidden" id="userIDParametreGeneral" name="userIDParametreGeneral" class="userID" th:value="${userId}"/>
+	         <table  id="paramsGeneralTable">
+				<tr style="text-align: center">
+					<th  class="col" th:text="#{setting.general.title.compte.gr}"></th>
+					<th  class="col" th:text="#{setting.general.title.gr}"></th>
+					<th  class="col" th:text="#{setting.general.title.ref.remise}"></th>
+				</tr>
+			 </table>	
+		     <form method="POST" action="showRefRemises" th:each="compteGr: ${listCompteGr}">
+			      <table   id="paramsGeneralTable">
+						 <tr style="text-align: center">
+			                <td class="idcompteGrTd">
+			                    <span  th:text="${compteGr.idCompteGr}"></span>
+			                </td>			 
+							<td class="nomCompteGrTd">
+								<span  th:text="${compteGr.nomRemettant}"></span>
+					            <input th:if="${compteGr.paramRefRemise != null}" type="hidden" id="idParamRefRemiseParametreGeneral" name="idParamRefRemiseParametreGeneral"  th:value="${compteGr.paramRefRemise.idParamRefRemise}" />
+							    <input th:if="${compteGr.paramRefRemise == null}" type="hidden" id="idParamRefRemiseParametreGeneral" name="idParamRefRemiseParametreGeneral"  value="non formule" />
+							    <input type="hidden" id="idCompteGrParametreGeneral" name="idCompteGrParametreGeneral"  th:value="${compteGr.idCompteGr}" />
+							</td>
+							<td class="buttonShowGrTd">
+								<button type="submit" class="btn btn-secondary buttonShowGr" th:text="#{show.ref.remises.button}"></button>
+							</td>
+						</tr>
+					</table>
+		     </form>    
+	</div>
+</html>

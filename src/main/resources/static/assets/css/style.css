@@ -1,0 +1,428 @@
+.remiseInfo{
+    height:100%;
+    width:100%;
+    border:2px solid #d68717;
+    margin-top: 25px;
+    border-radius: 10px;
+}
+
+.remiseTitle{
+    width: 235px;
+}
+.listRemiseTitle{
+    width: 152px;
+}
+.row {
+
+    margin-right: -100px!important;
+    margin-left: 0px!important;
+    margin-bottom: 15px!important;
+}
+
+.row_remise{
+	display: -webkit-box;
+	margin-bottom: 15px;
+	
+}
+.scanBtn
+{
+
+    color: #fff!important;
+    background-color: #FBB03B!important;
+    font-weight: bolder!important;
+    padding: 0.275rem .65rem!important;
+    margin-top: 10px!important;
+        border-color: transparent!important;
+
+}
+.clotureBtn{
+	 color: #fff!important;
+    background-color: #117a8b!important;
+    font-weight: bolder!important;
+    padding: 0.275rem .65rem!important;
+    margin-top: 10px!important;
+        border-color: transparent!important;
+}
+
+.txt_centre
+ {
+ 	text-align: center;
+ }
+ .txt_underline
+ {
+ 	text-decoration: underline;
+    text-decoration-color: #d68717;
+ }
+ .chequeTitle
+ {
+ 	width: 336px;
+ 	
+ }
+ .title
+ {
+ 	margin-top: -20px;
+    margin-left: 5px;
+    background: white;
+    margin-left: 15px;
+    color: #d68717;
+    font-size: 23px;
+ }
+ .img_cheque
+ {
+ 	max-width: 20%;
+    margin-bottom: 3px;
+ }
+ .cheques
+ {
+ 	height: 350px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+ }
+ .cheques .row
+ {
+   margin-left: 10px!important;
+ }
+ .iconMsg
+ {
+ 	max-width: 5%;
+ }
+ .success
+ {
+ 	color:green;
+ }
+ .failed
+ {
+ 	color:red;
+ }
+ .warning
+ {
+ 	color:#ffd32c;
+ }
+ .msgDiv
+ {
+ 	font-weight: bold;
+ 	margin-bottom: 6px;
+ }
+.msgs
+{
+	background-color: #f1f1f1;
+    max-width: 40%;
+    border-radius: 8px;
+    margin-left: 11px;
+    height: 350px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  float: right;
+  color: #000;
+  cursor:pointer;
+
+}
+.dropdown span
+{
+  font-weight: bold;
+  
+  text-decoration: underline;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+    background-color: #f9f9f9;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding-left: 8px;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+
+}
+.dropdown:hover
+{
+ color:#d78817;
+}
+.dropdown-content P
+{
+ margin-bottom: 5px;
+ margin-top: 5px;   
+ font-weight: bold;
+ font-size: 12px;
+}
+.img_user
+{
+ margin-bottom: 4px;
+ margin-right: 2px;
+}
+.dropdown-content a 
+{
+    color: #d78817;
+    text-decoration: none;
+    background-color: transparent;
+}
+.dropdown-content a:hover
+{
+    text-decoration: underline;
+}
+.col
+{
+    font-size: 11px!important;
+    width: 1%!important;
+    background-color:#fbb03b85;
+    font-weight: bold;
+    vertical-align: inherit!important;
+}
+th,td
+{
+    border: 2px solid #000000!important;
+}
+
+#addRemiseTitle, #deleteRemiseTitle,#confTypeRemiseTitle
+{
+background-color:#d78817;
+color:white;
+}
+a
+{
+    color: #d68717!important;
+}
+
+.pop-outer{
+	background-color: rgba(0, 0, 0, 0.5);
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+
+.pop-inner {
+	background-color: #fff;
+	width: 650px;
+	height: 400px;
+	padding: 25px;
+	margin: 5% auto;
+	
+}
+.page-item.active .page-link{
+	background-color: #FBB03B;
+}
+.table-sm td, .table-sm th {
+    padding: .0rem!important;
+}
+.custA{
+	 padding: 0px!important;
+}
+
+.form-control,.btnRech{
+	padding: 0.1rem 1.1rem;
+}
+.tr-erreur{
+	background-color: #f32525;
+}
+.tr-success{
+	background-color: #3ade6b;
+}
+.pagenation{
+	padding: 4px;
+	padding-left: 10px;
+	padding-right: 10px;	
+}
+.errorInfo{
+	height:100%;
+    width:100%;
+    border:2px solid #d68717;
+    margin-top: 25px;
+    border-radius: 10px;
+}
+.errorTitle{
+	 width:  52px;
+	 margin-left: 30px!important;
+}
+.homeBtn{
+	color: #fff!important;
+    background-color: #FBB03B!important;
+    font-weight: bolder!important;
+    padding: 0.275rem .65rem!important;
+    margin-top: -23px!important;
+    border-color: transparent!important;
+    margin-left: 491px!important;
+}
+.msg-error{
+	margin-left: 6px;
+}
+#settingsHeader{
+	background-color:#d78817 !important;
+	width: 778px;
+}
+.addBtn{
+	color: #fff!important;
+    background-color: #FBB03B!important;
+    font-weight: bolder!important;
+    padding: 0.275rem .65rem!important;
+    margin-top: 10px!important;
+    border-color: transparent!important;
+    margin-left: 22.275rem;
+}
+.table-bordered {
+    border: 0px solid #dee2e6;
+}
+.generalSetting-tabClass {
+	width: 222px;
+	text-align: center;
+}
+.prametreChequeLCN-tabClass{
+	width: 246px;
+	text-align: center;
+}
+.prametreCheque-tabClass{
+	width: 222px;
+	text-align: center;
+}
+.parametreLcn-tabClass{
+	width: 246px;
+	text-align: center;
+}
+.nav-tabs .nav-link{
+	border: 1px solid transparent;
+    border-top-left-radius: 0.25rem!important;;
+    border-top-right-radius: 0.25rem!important;;
+    margin-bottom: -20px!important;;
+    width: 374px;
+}
+.nav-tabs .nav-link.active{
+	border: 1px solid transparent;
+    border-top-left-radius: 0.25rem!important;;
+    border-top-right-radius: 0.25rem!important;;
+    margin-bottom: -20px!important;;
+    background-color: #f1f1f1!important;
+}
+
+#paramsGeneralTable{
+	margin-bottom: 0;
+}
+#successHeader{
+	background-color:#d78817 !important;
+}
+#failHeader{
+	background-color:#d78817 !important;
+}
+#showRefRemiseHeader{
+	background-color:#d78817 !important;
+}
+.buttonShowGr
+{
+	margin-left: 0.275rem;
+	color: #fff!important;
+    background-color: #FBB03B!important;
+    font-weight: bolder!important;
+    border-color: transparent!important;
+}
+.buttonUpdate
+{
+	color: #fff!important;
+    background-color: #FBB03B!important;
+    font-weight: bolder!important;
+    padding: 0.275rem .65rem!important;
+    margin-top: -52px!important;
+    border-color: transparent!important;
+    margin-left: 25.275rem;
+}
+#settingReferenceRemiseNotChangedHeader{
+	background-color:#d78817 !important;
+}
+#settingReferenceRemiseisChangedHeader{
+	background-color:#d78817 !important;
+}
+.colonneCompteGr{
+	font-size: 11px!important;
+    width: 40%!important;
+    vertical-align: inherit!important;
+    background-color:#fbb03b85;
+    font-weight: bold;
+}
+.colonneGr
+{
+	font-size: 11px!important;
+	width: 42%!important;
+	vertical-align: inherit!important;
+    background-color:#fbb03b85;
+    font-weight: bold;
+}
+.colonneRefRemise
+{
+	font-size: 11px!important;
+	width: 41%!important;
+	vertical-align: inherit!important;
+    background-color:#fbb03b85;
+    font-weight: bold;
+}
+.compteGr{
+	width: 26%!important;
+    font-size: 12px!important;
+}
+.ajouterReferenceRemise{
+    border: 0px solid #000000!important;
+    width: 90%!important;
+    margin-left: 19px;
+    color: #fff!important;
+    background-color: #FBB03B!important;
+    font-weight: bolder!important;
+}
+.inputReferenceRemise{
+	width: 90%!important;
+    margin-left: 1px;
+    margin-top: 12px;
+}
+.tdInputformule{
+	border: 0px solid #000000!important;
+    width: 90%!important;
+    margin-left: 19px;
+    color: #fff!important;
+    font-weight: bolder!important;
+}
+#referenceRemiseUpdatedModalHeader{
+	background-color:#d78817 !important;
+}
+#formuleUpdatedHeader{
+	background-color:#d78817 !important;
+}
+.trFormule:hover{
+	background-color: white !important;
+}
+.settingModalContent{
+	width: 780px;
+    height: 548px;
+    margin-left: -135px;
+}
+.idcompteGrTd{
+	width: 248px;
+}
+.nomCompteGrTd{
+	width: 247px;
+}
+.buttonShowGrTd{
+	width: 251px;
+}
+#errorFormuleHeader{
+	background-color:#d78817 !important;
+}
+.errorFormuleDiv{
+	margin-right: 6.25rem!important;
+    margin-top: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    color: red;
+}
+.existingFormuleDiv{
+	margin-right: 6.25rem!important;
+    margin-top: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    color: red;
+}

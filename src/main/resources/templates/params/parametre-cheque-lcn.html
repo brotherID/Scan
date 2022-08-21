@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymleaf/layout"
+	layout:decorator="layout">
+
+<div th:fragment="content-parametre-cheque-lcn">
+            <ul class="nav nav-tabs" id="myTabChequeLcn" role="tablist">
+               <li class="nav-item"><a class="prametreCheque-tabClass  nav-link active" id="prametreCheque-tab" data-toggle="tab" href="#prametreCheque" role="tab" aria-controls="prametreCheque" aria-selected="true" th:text="#{tab.setting.cheque}"></a></li>
+               <li class="nav-item"><a class="parametreLcn-tabClass nav-link" id="parametreLcn-tab" data-toggle="tab" href="#parametreLcn" role="tab" aria-controls="parametreLcn" aria-selected="false" th:text="#{tab.setting.lcn}"></a></li>
+            </ul>
+                                  
+            <div class="parametrageChequeLcn tab-content" id="myTabContentChequeLcn">
+               
+					<!-- begin body Parametre cheque -->
+					<div class="parametreChequeClass  tab-pane fade show active" id="prametreCheque" role="tabpanel" aria-labelledby="prametreCheque-tab">
+						<div  th:replace="params/parametre-cheque :: content-parametre-cheque" />
+					</div>
+					<!-- end body Parametre cheque -->
+					<!-- begin body Parametre LCN -->
+					<div class="tab-pane fade parametreLcnClass" id="parametreLcn" role="tabpanel" aria-labelledby="parametreLcn-tab">
+					    <div th:replace="params/parametre-lcn :: content-parametre-lcn" /> 
+					</div>
+					<!-- end body Parametre LCN -->
+			</div>
+</div>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymleaf/layout"
+	layout:decorator="layout">
+    <div th:fragment="content-parametre-lcn">
+         <form method="POST" action="updateSettingLcn">
+			<input type="hidden" id="userIDParametreLcn" name="userIDParametreLcn" class="userID" th:value="${userId}"/>
+			<div class="form-check">
+				  <div th:if="${hasLcn ne null}">
+					<input class="form-check-input" type="checkbox" th:checked="${hasLcn}"   id="checkboxLcn" th:name="${idTypeValeurLCN}" onchange="checkboxLcnChanged()"> 
+				  </div> 
+			     <label class="form-check-label"for="checkboxLcn" th:text="#{label.lcn}"></label>
+			</div>
+		    <div th:if="${hasLcn ne null}">
+				<table class="table table-bordered table-sm" id="paramsLcnTable" th:style="${hasLcn ? 'display: block' : 'display: none'}">
+					<tr style="text-align: center">
+						<th scope="col" class="col" th:text="#{th.type.remise}"></th>
+						<th scope="col" class="col" th:text="#{th.case.a.cocher}"></th>
+					</tr>
+					<tr style="text-align: center" th:each="typeRemiseLCN: ${typeRemisesLCN}">
+						<td>
+							<span th:text="${typeRemiseLCN.type}"></span>
+						</td>
+						<td>
+							<div class="form-check" th:if="${listIdTypeRemiseHasUser ne null}">
+							    <input class="form-check-input" type="checkbox"  th:name="${typeRemiseLCN.idTypeRemise}" th:id="${typeRemiseLCN.idTypeRemise}" th:checked="${#lists.contains(listIdTypeRemiseHasUser,''+typeRemiseLCN.idTypeRemise)}">
+							</div>
+						</td>
+					</tr>
+				</table>
+			 </div>
+			 <button disabled type="submit" id="buttonValidateLcn" class="btn btn-secondary addBtn" th:text="#{update.setting.cheque.Lcn}"></button>
+		 </form>
+		     <script th:src="@{/assets/js/jquery.js}"></script>
+			 <script type="text/javascript">
+				   $(document).ready(function(){
+						$( "#paramsLcnTable input:checkbox" ).change(function(){
+							disableEnableButtonValidateLcn();
+						});
+						
+						$( "#checkboxLcn" ).change(function(){
+							disableEnableButtonValidateLcn();
+						});
+						
+					});
+					
+					function disableEnableButtonValidateLcn(){
+						if($("#checkboxLcn:checked").length==1 && 
+					    		$("#paramsLcnTable input:checkbox:checked" ).length >= 1){
+					         $( "#buttonValidateLcn").attr('disabled',false)
+					    }
+					    else
+					    {
+					         $( "#buttonValidateLcn").attr('disabled',true)
+					    }
+					}
+			   </script>
+     </div>
+</html>

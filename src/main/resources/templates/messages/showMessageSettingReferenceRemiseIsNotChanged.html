@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymleaf/layout"
+	layout:decorator="layout">
+	
+	<div th:fragment="content-show-message-setting-reference-remise-is-not-changed">
+	     	<input  type="hidden" id="settingReferenceRemiseisChanged" th:value="${settingReferenceRemiseisChanged}"/>
+			<input type="hidden" id="settingReferenceRemiseNotChanged"  th:value="${settingReferenceRemiseNotChanged}"/>
+			<button id="butttonSettingReferenceRemiseisChanged"  data-toggle="modal" data-target="#settingReferenceRemiseisChangedModal" th:style="${'display: none'}">success</button>
+		    <button id="butttonSettingReferenceRemiseNotChanged"  data-toggle="modal" data-target="#settingReferenceRemiseNotChangedModal" th:style="${'display: none'}">fail</button>
+		
+		     <div class="modal fade" id="settingReferenceRemiseisChangedModal" tabindex="-1" role="dialog" aria-labelledby="settingReferenceRemiseisChangedModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header" id="settingReferenceRemiseisChangedHeader">
+			        <h5 class="modal-title" id="settingReferenceRemiseisChangedTitle" th:text="#{setting.reference.remise.is.changed.title}"></h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body" th:text="#{msg.setting.reference.remise.is.changed}">
+				      
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary scanBtn" data-dismiss="modal" th:text="#{button.annuler}"></button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			
+			<div class="modal fade" id="settingReferenceRemiseNotChangedModal" tabindex="-1" role="dialog" aria-labelledby="settingReferenceRemiseNotChangedModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header" id="settingReferenceRemiseNotChangedHeader">
+			        <h5 class="modal-title" id="settingReferenceRemiseNotChangedTitle" th:text="#{setting.reference.remise.not.changed.title}"></h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body" th:text="#{msg.setting.reference.remise.not.changed}">
+				       
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary scanBtn" data-dismiss="modal" th:text="#{button.annuler}"></button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+	</div>
+</html>	
+	

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymleaf/layout"
+	layout:decorator="layout">
+<head>
+<meta charset="UTF-8">
+<title>Création Remise</title>
+<link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{/assets/css/style.css}" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/assets/css/all.css}">
+<link rel="stylesheet" th:href="@{/assets/css//w3.css}">
+<link rel="stylesheet"  th:href="@{/assets/css/sidebar.css}">
+<link rel="icon" type="image/vnd.microsoft.icon"
+	th:href="@{/assets/images_fn/mini_logo2.png}" />
+</head>
+<body>
+
+	<div th:insert="sidebar :: sidebar" ></div>
+	<div id="main">
+
+		  <div class="row">
+		  		<div class="col-4">
+		  			<button id="openNav" class="w3-button w3-teal mt-4" onclick="w3_open_close()">&#9776;</button>
+		  		</div>
+		  		<div class="col-8">
+		    		<img th:src="@{/assets/imgs/logoProcheck.svg}" style="max-width: 40%;">
+		    	</div>
+		  </div>
+		<div class="container mb-5" th:insert="menu :: menu" ></div>
+		<div class="container remiseInfo">
+			
+			<h1 class="remiseTitle title" th:text="'Création Remise '+${typeValeur}"></h1>
+			<form action="addRemise" method="post" class="ml-5">
+				<div class="row_remise">
+					<div class="col-6">
+						<label>Point Capture</label> 
+						<input type="text"
+							class="form-control" 
+							th:value="${currentUser.capturePoint}" name="cdf" readonly maxlength="5" />
+					</div>
+					<div class="col-6">
+						<label>Rib remettant</label>
+						<input th:if="${compteGrs.size()==1}" type="text" th:value="${compteGrs.get(0).ribRemettant}"
+							required="required" class="form-control" name="ribRemettant" readonly />
+						<select th:attr="onchange=|getNomRemettantByRIB(this);|" th:if="${compteGrs.size()>1}" class="form-control form-control-sm" name="ribRemettant" required="required">
+							<option  th:each="c:${compteGrs}" th:value="${c.ribRemettant}" th:text="${c.ribRemettant}"></option>
+						</select> 
+					</div>
+				</div>
+				<div class="row_remise mt-3">
+					<div class="col-6">
+						<label class="control-label">Type valeur</label>
+						 <input th:if="${currentUser.typeValeurs.size()==1}" type="text" th:value="${currentUser.typeValeurs.get(0).type}"
+							required="required" class="form-control" name="typeValeur" readonly />
+						<input th:if="${currentUser.typeValeurs.size()>1}" type="text" id="typeValeur"
+							required="required" class="form-control" name="typeValeur" th:value="${typeValeur}" readonly />
+						
+					</div>
+					<div class="col-6">
+						<label>Nom remettant</label>
+						<input th:if="${compteGrs.size()==1}" type="text" th:value="${compteGrs.get(0).nomRemettant}"
+							required="required" class="form-control" name="nomRemettant" readonly />
+						<input id="nomRemettant" th:if="${compteGrs.size()>1}" type="text" th:value="${compteGrs.get(0).nomRemettant}"
+							required="required" class="form-control" name="nomRemettant" readonly />
+					</div>
+					
+
+				</div>
+				<div class="row_remise mt-3">
+				<div class="col-6">
+						<label class="control-label">Type remise</label>
+						<input th:if="${lstTypeRemise.size()==1}" type="text" th:value="${lstTypeRemise.get(0).type}"
+							required="required" class="form-control" name="typeRemise" readonly />
+						<select th:if="${lstTypeRemise.size()>1}" class="form-control form-control-sm" name="typeRemise" required="required">
+							<option th:each="tr:${lstTypeRemise}" th:value="${tr.type}" th:text="${tr.typeLong}"></option>
+						</select>
+					</div>
+					<div class="col-6">
+						<label>Montant Remise</label> 
+						<input class="form-control"
+							required="required" placeholder="Montant *" type="number"
+							step="0.01" name="montantRemise" min="0.01" max="1000000000" />
+					</div>
+				</div>
+				<div class="row_remise mt-3">
+				<div class="col-6">
+						<label>Réference remise</label> 
+						<input th:if="${currentUser.paramRefRemise!=null && currentUser.paramRefRemise.isAuto}" type="text"
+							required="required" class="form-control" readonly th:value="${referenceRemise}"
+							th:maxlength="${currentUser.paramRefRemise.maxLength}" th:minlength="${currentUser.paramRefRemise.minLength}"
+							placeholder="Reference remise*" name="referenceRemise"/>
+						<input th:if="${currentUser.paramRefRemise!=null && !currentUser.paramRefRemise.isAuto && !currentUser.paramRefRemise.isNumerique}" type="text"
+							required="required" class="form-control" th:maxlength="${currentUser.paramRefRemise.maxLength}" th:minlength="${currentUser.paramRefRemise.minLength}"
+							placeholder="Reference remise1*" name="referenceRemise"/>
+						<input th:if="${currentUser.paramRefRemise!=null && !currentUser.paramRefRemise.isAuto && currentUser.paramRefRemise.isNumerique}" type="text" pattern="\d*"
+							required="required" class="form-control" th:maxlength="${currentUser.paramRefRemise.maxLength}" th:minlength="${currentUser.paramRefRemise.minLength}"
+							placeholder="Reference remise**" name="referenceRemise"/>
+					</div>
+					
+					<div class="col-6">
+						<label>Nombre valeur</label> 
+						<input class="form-control"
+							required="required" placeholder="Nombre Valeur *"
+							type="number" name="nombreValeur" value="0" />
+					</div>
+				
+				</div>
+				<div class="row_remise">
+					<div class="col-4"></div>
+					<div class="col-2">
+						<button type="submit" class="btn scanBtn" style="margin-left: 65px;" >Crée remise</button>
+					</div>
+					<div class="col-4"></div>
+				</div>
+				<input  type="hidden" id="referenceRemiseUpdated" name="referenceRemiseUpdated" th:value="${referenceRemiseUpdated}"/>
+	            <input  type="hidden" id="referenceRemiseOld" name="referenceRemiseOld" th:value="${referenceRemiseOld}"/>
+				
+			</form>
+		</div>
+	</div>
+	
+	
+	
+	
+	
+</body>
+<script th:src="@{/assets/js/jquery.js}"></script>
+<script type="text/javascript">
+
+function getNomRemettantByRIB(element){
+	const response = fetch('/PKCapWeb/compteGrs/ribRemettant/'+element.value)
+    .then((response)=>{
+        return response.json();
+    })
+    .then((data)=>{
+    	$("#nomRemettant").val(data.nomRemettant);
+    });
+    
+}
+
+</script>
+<script th:src="@{/assets/js/sidebar.js}"></script>
+</html>

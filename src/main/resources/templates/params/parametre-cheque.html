@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymleaf/layout"
+	layout:decorator="layout">
+		<div th:fragment="content-parametre-cheque">
+				<form method="POST" action="updateSettingCheque">
+					<input type="hidden" id="userIDParametreCheque" name="userIDParametreCheque" class="userID" th:value="${userId}"/>
+					<div class="form-check">
+						
+						<div th:if="${hasCheque ne null}">
+						    <input class="form-check-input"  th:checked="${hasCheque}"  type="checkbox" id="checkboxCheque" th:name="${idTypeValeur}" onchange="checkboxChequeChanged()"> 
+						</div>    
+					    <label class="form-check-label"for="checkboxCheque" th:text="#{label.cheque}"></label>
+					</div>
+					
+					 <div th:if="${hasCheque ne null}">
+						<table  class="table table-bordered table-sm"   id="paramsChequeTable"    th:style="${hasCheque ? 'display: block' : 'display: none'}">
+			
+							<tr style="text-align: center">
+								<th scope="col" class="col" th:text="#{th.type.remise}"></th>
+								<th scope="col" class="col" th:text="#{th.case.a.cocher}"></th>
+							</tr>
+							<tr style="text-align: center" th:each="typeRemiseCHQ: ${typeRemisesCHQ}">
+								<td>
+									<span th:text="${typeRemiseCHQ.type}"></span>
+								</td>
+								<td>
+									<div class="form-check" th:if="${listIdTypeRemiseHasUser ne null}">
+									
+									    <input class="form-check-input" 
+									    type="checkbox"  
+									    th:name="${typeRemiseCHQ.idTypeRemise}" 
+									    th:id="${typeRemiseCHQ.idTypeRemise}" 
+									    th:checked="${#lists.contains(listIdTypeRemiseHasUser,''+typeRemiseCHQ.idTypeRemise)}" 
+									    >
+									</div>
+								</td>
+							</tr>
+						</table>
+					  </div>
+					  <button disabled type="submit" id="buttonValidateCheque" class="btn btn-secondary addBtn" th:text="#{update.setting.cheque.Lcn}"></button>
+					  </form>	 
+					    <script th:src="@{/assets/js/jquery.js}"></script>
+						<script type="text/javascript">
+							$(document).ready(function(){
+								$( "#paramsChequeTable input:checkbox" ).change(function(){
+									disableEnableButtonValidateCheque();
+								});
+								
+								$( "#checkboxCheque" ).change(function(){
+									disableEnableButtonValidateCheque();
+								});
+								
+							});
+							
+							function disableEnableButtonValidateCheque(){
+								if($("#checkboxCheque:checked").length==1 && 
+							    		$("#paramsChequeTable input:checkbox:checked" ).length >= 1){
+							       
+							         $( "#buttonValidateCheque").attr('disabled',false)
+							    }
+							    else
+							    {
+							         
+							         $( "#buttonValidateCheque").attr('disabled',true)
+							    }
+							}
+							
+						</script>
+					  
+				  
+		</div>
+		
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymleaf/layout"
+	layout:decorator="layout">
+
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Error</title>
+
+
+<link  th:href="@{assets/css/bootstrap.min.css}" rel="stylesheet">
+
+<link  th:href="@{assets/css/style.css}" rel="stylesheet">
+
+<link rel="icon" type="image/vnd.microsoft.icon"
+	 th:href="@{assets/images_fn/mini_logo2.png}" />
+<link rel="stylesheet"  th:href="@{/assets/css/all.css}">
+<link rel="stylesheet" th:href="@{/assets/css//w3.css}">
+<link rel="stylesheet"  th:href="@{/assets/css/sidebar.css}">
+
+</head>
+<body>
+	<!-- <h1>ERROR!!</h1>
+	<hr> -->
+	
+	
+	<div id="main">
+		<div class="row">
+		
+	        <div class="col-4">
+	  			 
+	  		</div>	
+	  		
+	  		<div class="col-8">
+	    		<img th:src="@{/assets/imgs/logoProcheck.svg}" style="max-width: 40%;">
+	    	</div>
+		</div>
+		
+		<div class="container errorInfo">
+			
+			<h1 class="errorTitle title">Error</h1>
+			<div class="row">
+				<div class="alert alert-warning msg-error" role="alert">
+                      Une erreur c'est produite !
+                </div>
+			</div>
+			
+		<a class="btn btn-secondary homeBtn" href="/">Home</a>	
+
+		</div>
+	</div>
+	
+	
+	
+	
+	
+</body>
+
+
+</html>
